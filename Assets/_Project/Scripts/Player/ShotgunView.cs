@@ -12,8 +12,9 @@ namespace Game.Player
         [SerializeField, Required] private Camera _camera;
 
         [Header("Settings")]
-        [SerializeField] private float _rotationLerp = 20f;
         [SerializeField] private Transform _target;
+        [SerializeField] private float _rotationLerp = 20f;
+        [SerializeField] private float _rotationStep = 12.5f;   
 
         private IInputService _inputService;
 
@@ -40,13 +41,41 @@ namespace Game.Player
 
         private void Update()
         {
+            //Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
+            //Quaternion desiredRotation = Quaternion.FromToRotation(Vector3.forward, ray.direction);
+
+            //if (_shotgun.IsReloading || _shotgun.IsInCooldown)
+            //    desiredRotation = _initialRotation;
+
+            //_target.rotation = Quaternion.Lerp(_target.rotation, desiredRotation, _rotationLerp * Time.deltaTime);
+
             Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
-            Quaternion desiredRotation = Quaternion.FromToRotation(Vector3.forward, ray.direction);
+
+            Quaternion desiredRotation;
 
             if (_shotgun.IsReloading || _shotgun.IsInCooldown)
+            {
                 desiredRotation = _initialRotation;
-            
-            _target.rotation = Quaternion.Lerp(_target.rotation, desiredRotation, _rotationLerp * Time.deltaTime);
+            }
+            else
+            {
+                desiredRotation = GetQuantizedRotation(ray.direction);
+            }
+
+            _target.rotation = desiredRotation;
+        }
+
+        private Quaternion GetQuantizedRotation(Vector3 direction)
+        {
+            Vector3 localDirection = _target.parent
+                ? _target.parent.InverseTransformDirection(direction)
+                : direction;
+
+            float angle = Mathf.Atan2(localDirection.x, localDirection.z) * Mathf.Rad2Deg;
+
+            angle = Mathf.Round(angle / _rotationStep) * _rotationStep;
+
+            return Quaternion.Euler(transform.eulerAngles.x, angle, 0f);
         }
     }
 }

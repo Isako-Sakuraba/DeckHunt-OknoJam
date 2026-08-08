@@ -37,7 +37,11 @@ namespace Game.Player
             if (_shotgun.IsReloading || _shotgun.IsInCooldown)
                 return;
 
-            Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
+            if (_inputService.Shoot.Pressed && _shotgun.TryShoot())
+                ShootWithSpherecast(_shotgun.Damage);
+
+            if (_inputService.Reload.Pressed)
+                _shotgun.TryReload();
         }
 
         private void ShootWithSpherecast(float damage)
