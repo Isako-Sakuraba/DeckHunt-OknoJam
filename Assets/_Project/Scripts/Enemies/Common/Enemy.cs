@@ -12,6 +12,8 @@ namespace Game.Enemies
 
         protected RoadLayer RoadLayer;
 
+        public event Action<Enemy> Died = delegate { };
+
         private void Awake()
         {
             if (Target == null)
@@ -35,6 +37,7 @@ namespace Game.Enemies
 
         private void OnDied()
         {
+            Died.Invoke(this);
             Despawn();
         }
 

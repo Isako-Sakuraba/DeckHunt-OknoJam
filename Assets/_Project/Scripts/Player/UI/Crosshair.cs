@@ -11,7 +11,6 @@ namespace Game.Player
         [SerializeField, Required] private Canvas _canvas;
         [SerializeField] private RectTransform _target;
 
-
         private IInputService _inputService;
 
         private void Awake()

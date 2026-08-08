@@ -17,12 +17,13 @@ namespace Game.Enemies
         /// </summary>
         /// <param name="enemy">enemy prefab</param>
         /// <returns>True if succeeded, otherwise false</returns>
-        public bool TrySpawn(Enemy enemy)
+        public bool TrySpawn(Enemy enemy, out Enemy instance)
         {
+            instance = null;
 
             if (_roadLayerSystem.TryGetUnoccupiedLayer(out var roadLayer))
             {
-                var instance = Instantiate(enemy);
+                instance = Instantiate(enemy);
                 instance.Spawn(roadLayer);
                 return true;
             }
