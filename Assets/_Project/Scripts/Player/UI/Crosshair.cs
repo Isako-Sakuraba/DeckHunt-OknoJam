@@ -1,38 +1,42 @@
 using Game.Core;
 using Game.Services;
 using UnityEngine;
+using Alchemy.Inspector;
 
-public class Crosshair : MonoBehaviour
+namespace Game.Player
 {
-    [Header("Dependencies")]
-    [SerializeField] private Canvas _canvas;
-    [SerializeField] private RectTransform _target;
-
-
-    private IInputService _inputService;
-
-    private void Awake()
+    public class Crosshair : MonoBehaviour
     {
-        if (_target == null)
-            _target = GetComponent<RectTransform>();
-    }
+        [Header("Dependencies")]
+        [SerializeField, Required] private Canvas _canvas;
+        [SerializeField] private RectTransform _target;
 
-    private void Start()
-    {
-        _inputService = ServiceLocator.Get<IInputService>();
-    }
 
-    private void Update()
-    {
-        var mousePosition = _inputService.MousePosition;
+        private IInputService _inputService;
 
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            _canvas.transform as RectTransform,
-            mousePosition,
-            _canvas.worldCamera,
-            out Vector2 localPosition
-        );
+        private void Awake()
+        {
+            if (_target == null)
+                _target = GetComponent<RectTransform>();
+        }
 
-        _target.localPosition = localPosition;
+        private void Start()
+        {
+            _inputService = ServiceLocator.Get<IInputService>();
+        }
+
+        private void Update()
+        {
+            var mousePosition = _inputService.MousePosition;
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                _canvas.transform as RectTransform,
+                mousePosition,
+                _canvas.worldCamera,
+                out Vector2 localPosition
+            );
+
+            _target.localPosition = localPosition;
+        }
     }
 }
