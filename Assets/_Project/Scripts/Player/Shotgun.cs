@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,24 +23,95 @@ namespace Game.Player
 
         private int _currentAmmo;
 
-        private float _shootCooldownTimer;
-        private float _reloadTimer;
+        private float _cooldownTimer;
+        private Action _cooldownCallback;
 
         public float Damage => _cachedValue.Damage * _cachedValue.DamageMultiplier;
         public int MaxAmmo => _cachedValue.Ammo;
         public int CurrentAmmo => _currentAmmo;
+        public bool IsEmpty => _currentAmmo <= 0;
 
         public float ReloadTime => _cachedValue.Damage * _cachedValue.DamageMultiplier;
-        public float ReloadTimer => _reloadTimer;
+        public bool IsReloading => IsEmpty && _cooldownTimer > 0f;
 
         public float ShootCooldown => _cachedValue.ShootCooldown * _cachedValue.ShootCooldownMultiplier;
-        public float ShootCooldownTimer => _shootCooldownTimer;
+        public bool IsInCooldown => !IsEmpty && _cooldownTimer > 0f;
 
-        private Action<ShotgunValues> Shot = delegate { };
-        private Action<ShotgunValues> Reload = delegate { };
+        private Action<float> Shot = delegate { };
+        private Action<float> Reload = delegate { };
 
         private ShotgunValues _cachedValue;
         private Stack<ShotgunValues> _shotgunStack = new();
+
+        private void Awake()
+        {
+            _cooldownCallback = RestoreAmmo;            
+        }
+
+        private void Start()
+        {
+            RecalculateValues();
+        }
+
+        private void RestoreAmmo()
+        {
+            _currentAmmo = MaxAmmo;
+        }
+
+        public bool TryShoot()
+        {
+            if (IsInCooldown || IsReloading)
+                return false;
+
+            Shot.Invoke(Damage);
+
+            _currentAmmo--;
+
+            _cooldownTimer = IsEmpty ? ShootCooldown + ReloadTime : ShootCooldown;
+
+            if (IsEmpty)
+            {
+                _cooldownTimer = ShootCooldown + ReloadTime;
+                Reload.Invoke(ReloadTime);
+            }
+            else
+            {
+                _cooldownTimer = ShootCooldown;
+            }
+
+            return true;
+        }
+
+        public bool TryReload()
+        {
+            if (IsInCooldown || IsReloading)
+                return false;
+
+            if (CurrentAmmo == MaxAmmo) 
+                return false;
+
+            _cooldownTimer = ReloadTime;
+            Reload.Invoke(ReloadTime);
+            return true;
+        }
+
+        private void Update()
+        {
+            UpdateTimer(ref _cooldownTimer, _cooldownCallback);
+        }
+
+        private void UpdateTimer(ref float value, Action callback)
+        {
+            if (value > 0f)
+            {
+                value -= Time.deltaTime;
+                if (value <= 0f)
+                {
+                    _cooldownTimer = 0f;
+                    callback?.Invoke();
+                }
+            }
+        }
 
         private void RecalculateValues()
         {

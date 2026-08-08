@@ -104,7 +104,7 @@ namespace Game.Generated
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Reload"",
+                    ""name"": ""RestoreAmmo"",
                     ""type"": ""Button"",
                     ""id"": ""076848a8-4c7d-400c-a963-531c83ae6117"",
                     ""expectedControlType"": """",
@@ -159,7 +159,7 @@ namespace Game.Generated
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Reload"",
+                    ""action"": ""RestoreAmmo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -204,7 +204,7 @@ namespace Game.Generated
             // Gameplay
             m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
             m_Gameplay_Shoot = m_Gameplay.FindAction("Shoot", throwIfNotFound: true);
-            m_Gameplay_Reload = m_Gameplay.FindAction("Reload", throwIfNotFound: true);
+            m_Gameplay_Reload = m_Gameplay.FindAction("RestoreAmmo", throwIfNotFound: true);
             m_Gameplay_Cancel = m_Gameplay.FindAction("Cancel", throwIfNotFound: true);
             m_Gameplay_MousePosition = m_Gameplay.FindAction("MousePosition", throwIfNotFound: true);
             m_Gameplay_MouseDelta = m_Gameplay.FindAction("MouseDelta", throwIfNotFound: true);
@@ -309,7 +309,7 @@ namespace Game.Generated
             /// </summary>
             public InputAction @Shoot => m_Wrapper.m_Gameplay_Shoot;
             /// <summary>
-            /// Provides access to the underlying input action "Gameplay/Reload".
+            /// Provides access to the underlying input action "Gameplay/RestoreAmmo".
             /// </summary>
             public InputAction @Reload => m_Wrapper.m_Gameplay_Reload;
             /// <summary>
@@ -439,7 +439,7 @@ namespace Game.Generated
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnShoot(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "Reload" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "RestoreAmmo" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />

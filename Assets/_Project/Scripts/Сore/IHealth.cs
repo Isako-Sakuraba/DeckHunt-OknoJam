@@ -2,7 +2,7 @@ using System;
 
 namespace Game.Core
 {
-    public interface IHealth : IDamageable
+    public interface IHealth
     {
         public float Current { get; }
         public float Max { get; set; }
@@ -10,7 +10,9 @@ namespace Game.Core
         public bool IsDead { get; }
 
         public event Action Died;
+        public event Action<float> Changed;
 
         public void Heal(float amount);
+        public void Damage(float amount);
     }
 }

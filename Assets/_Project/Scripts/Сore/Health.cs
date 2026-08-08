@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace Game.Core
 {
-    public class Health : MonoBehaviour, IHealth
+    public sealed class Health : MonoBehaviour, IHealth
     {
         [SerializeField]
         private float _current = 20f;
@@ -18,7 +18,7 @@ namespace Game.Core
         public bool IsDead => Current <= 0f;
 
         public event Action Died = delegate { };
-        public event Action<float> Damaged = delegate { };
+        public event Action<float> Changed = delegate { };
 
         private void Awake()
         {
@@ -30,23 +30,23 @@ namespace Game.Core
         {
             _current += amount;
             ClampHealth();
+            Changed.Invoke(amount);
         }
 
-        public void TakeDamage(float amount)
+        public void Damage(float amount)
         {
             if (IsDead)
                 return;
 
             _current -= amount;
-            Damaged.Invoke(amount);
+            Changed.Invoke(amount);
+            ClampHealth();
 
-            if (_current < 0f)
+            if (_current <= 0f)
             {
                 Died.Invoke();
                 DiedUnityEvent.Invoke();
             }
-
-            ClampHealth();
         }
 
         private void ClampHealth()
