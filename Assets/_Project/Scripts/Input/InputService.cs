@@ -1,3 +1,5 @@
+using Game.Lifecycle;
+using Game.Services;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,7 +7,7 @@ using DefaultInputActions = Game.Generated.DefaultInputActions;
 
 namespace Game.Core
 {
-    public class InputService : MonoBehaviour, IInputService
+    public class InputService : MonoBehaviour, IInputService, IBootstrapable
     {
         private DefaultInputActions _actions;
 
@@ -33,6 +35,11 @@ namespace Game.Core
         public T GetValue<T>(InputAction action) where T : struct
         {
             return action.ReadValue<T>();
+        }
+
+        public void Bootstrap()
+        {
+            ServiceLocator.Register<IInputService>(this);
         }
     }
 }
