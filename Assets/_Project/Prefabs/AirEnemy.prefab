@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 148296950919576894}
   - component: {fileID: 6823263165161808265}
   - component: {fileID: 5635108038106358302}
+  - component: {fileID: -4436780949636701520}
   m_Layer: 8
   m_Name: AirEnemy
   m_TagString: Untagged
@@ -65,9 +66,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Enemies.AirEnemy
   Target: {fileID: 148296950919576894}
   Health: {fileID: 6823263165161808265}
-  _directionChangeCooldown: {x: 2, y: 4}
   _directionChangeCount: {x: 6, y: 10}
   _speedRange: {x: 6, y: 10}
+  _minNextPointRadius: 10
+  _nextPointAngle: 240
+--- !u!114 &-4436780949636701520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453191282244189771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc9132ab75d94447818b48107b05dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Core.MoneyOnDeath
+  _health: {fileID: 6823263165161808265}
+  _amount: 1
 --- !u!1 &1687139760354554273
 GameObject:
   m_ObjectHideFlags: 0
