@@ -12,6 +12,14 @@ namespace Game.Enemies
             public bool Occupied;
         }
 
+        private struct RoadLayerComparer : IComparer<RoadLayer>
+        {
+            public int Compare(RoadLayer x, RoadLayer y)
+            {
+                return x.Index.CompareTo(y.Index);
+            }
+        }
+
         [Title("Settings")]
         [Header("Origin")]
         [SerializeField] private Transform _origin;
@@ -34,7 +42,7 @@ namespace Game.Enemies
 
         private RoadLayerData[] _layers;
 
-        private List<RoadLayer> _unoccupiedLayers = new(16);
+        private SortedSet<RoadLayer> _unoccupiedLayers = new SortedSet<RoadLayer>(new RoadLayerComparer());
 
         private void Awake()
         {
@@ -65,8 +73,8 @@ namespace Game.Enemies
             if (_unoccupiedLayers.Count == 0)
                 return false;
 
-            RoadLayer unoccupied = _unoccupiedLayers[_unoccupiedLayers.Count - 1];
-            _unoccupiedLayers.RemoveAt(_unoccupiedLayers.Count - 1);
+            RoadLayer unoccupied = _unoccupiedLayers.Min;
+            _unoccupiedLayers.Remove(unoccupied);
 
             _layers[unoccupied.Index] = new RoadLayerData
             {
@@ -148,10 +156,7 @@ namespace Game.Enemies
         private Vector3 GetLayerPoint(int index, float horizontalOffset)
         {
             float layerSpacing = _sideLength / (_layerCount - 1);
-            float distanceFromBack = index * layerSpacing;
-
-            float forwardOffset =
-                -(_sideLength - _sideForwardOffset - distanceFromBack);
+            float forwardOffset = _sideForwardOffset + index * layerSpacing;
 
             return _origin.position
                 + _origin.right * horizontalOffset
@@ -185,26 +190,21 @@ namespace Game.Enemies
             Vector3 forward = _origin.forward;
             Vector3 right = _origin.right;
 
-            // Calculate corner points
-            // Front-left corner
             Vector3 frontLeft = origin
                 - right * _sideCenterOffset
                 + forward * _sideForwardOffset;
 
-            // Front-right corner
             Vector3 frontRight = origin
                 + right * _sideCenterOffset
                 + forward * _sideForwardOffset;
 
-            // Back-left corner
             Vector3 backLeft = origin
                 - right * _sideCenterOffset
-                - forward * (_sideLength - _sideForwardOffset);
+                + forward * (_sideForwardOffset + _sideLength);
 
-            // Back-right corner
             Vector3 backRight = origin
                 + right * _sideCenterOffset
-                - forward * (_sideLength - _sideForwardOffset);
+                + forward * (_sideForwardOffset + _sideLength);
 
             // Draw the playable region box (yellow)
             // Bottom edges (on the floor)
@@ -221,17 +221,15 @@ namespace Game.Enemies
 
             for (int i = 0; i < _layerCount; i++)
             {
-                // Calculate distance from back of the play area
-                float distanceFromBack = i * layerSpacing;
+                float forwardOffset = _sideForwardOffset + i * layerSpacing;
 
-                // Calculate the Z position relative to the play area
                 Vector3 leftPoint = origin
                     - right * _sideCenterOffset
-                    - forward * (_sideLength - _sideForwardOffset - distanceFromBack);
+                    + forward * forwardOffset;
 
                 Vector3 rightPoint = origin
                     + right * _sideCenterOffset
-                    - forward * (_sideLength - _sideForwardOffset - distanceFromBack);
+                    + forward * forwardOffset;
 
                 Gizmos.DrawLine(leftPoint, rightPoint);
 

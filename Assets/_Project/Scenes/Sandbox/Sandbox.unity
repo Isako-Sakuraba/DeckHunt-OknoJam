@@ -783,12 +783,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Enemies.RoadSystem
   _origin: {fileID: 1104174842}
-  _sideLength: 23.5
-  _sideCenterOffset: 10.6
-  _sideForwardOffset: 35.8
-  _spawnOffsetFromSide: 3.49
+  _sideLength: 30
+  _sideCenterOffset: 11.7
+  _sideForwardOffset: 13.5
+  _spawnOffsetFromSide: 4.91
   _layerCount: 8
-  _height: 15.75
+  _height: 17.2
   _lowBounds: 3
   _drawGizmos: 1
 --- !u!114 &1104174844
