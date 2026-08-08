@@ -10,6 +10,8 @@ namespace Game.Enemies
         [SerializeField] protected Transform Target;
         [SerializeField, Required] protected Health Health;
 
+        protected RoadLayer RoadLayer;
+
         private void Awake()
         {
             if (Target == null)
@@ -37,8 +39,6 @@ namespace Game.Enemies
         }
 
         protected virtual void LateAwake() { }
-
-        protected RoadLayer RoadLayer;
 
         public void Spawn(RoadLayer layer)
         {

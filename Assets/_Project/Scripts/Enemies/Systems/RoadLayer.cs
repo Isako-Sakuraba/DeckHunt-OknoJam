@@ -22,11 +22,15 @@ namespace Game.Enemies
             _roadSystem.GetRightSpawnPosition(_index);
 
         // Vertical spawn areas
-        public SpawnBounds LeftSpawnBounds =>
+        public VerticalBounds LeftSpawnBounds =>
             _roadSystem.GetLeftSpawnBounds(_index);
 
-        public SpawnBounds RightSpawnBounds =>
+        public VerticalBounds RightSpawnBounds =>
             _roadSystem.GetRightSpawnBounds(_index);
+
+        // Vertical
+        public RectBounds LayerBounds =>
+            _roadSystem.GetLayerBounds(_index);
 
         // Convenience
         public Vector3 LeftSpawnCenter =>

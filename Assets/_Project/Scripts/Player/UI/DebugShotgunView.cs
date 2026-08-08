@@ -13,8 +13,7 @@ namespace Game.Player
         private void Update()
         {
             _ammoText.text = $"{_shotgun.CurrentAmmo}/{_shotgun.MaxAmmo}";
-            _cooldownText.text = $"{_shotgun.ShootCooldown}";
+            _cooldownText.text = _shotgun.CooldownTimer.ToString("F2");
         }
-
     }
 }

@@ -38,6 +38,8 @@ namespace Game.Core
             if (IsDead)
                 return;
 
+            Debug.Log($"{gameObject.name} took {amount} damage!");
+
             _current -= amount;
             Changed.Invoke(amount);
             ClampHealth();
@@ -46,6 +48,7 @@ namespace Game.Core
             {
                 Died.Invoke();
                 DiedUnityEvent.Invoke();
+                Debug.Log($"{gameObject.name} has died!");
             }
         }
 

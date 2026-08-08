@@ -125,21 +125,21 @@ namespace Game.Enemies
             );
         }
 
-        public SpawnBounds GetLeftSpawnBounds(int index)
+        public VerticalBounds GetLeftSpawnBounds(int index)
         {
             Vector3 position = GetLeftSpawnPosition(index);
 
-            return new SpawnBounds(
+            return new VerticalBounds(
                 position + Vector3.up * _lowBounds,
                 position + Vector3.up * _height
             );
         }
 
-        public SpawnBounds GetRightSpawnBounds(int index)
+        public VerticalBounds GetRightSpawnBounds(int index)
         {
             Vector3 position = GetRightSpawnPosition(index);
 
-            return new SpawnBounds(
+            return new VerticalBounds(
                 position + Vector3.up * _lowBounds,
                 position + Vector3.up * _height
             );
@@ -156,6 +156,16 @@ namespace Game.Enemies
             return _origin.position
                 + _origin.right * horizontalOffset
                 + _origin.forward * forwardOffset;
+        }
+
+        public RectBounds GetLayerBounds(int index)
+        {
+            Vector3 topLeft = GetLeftPoint(index) + Vector3.up * _height;
+            Vector3 topRight = GetRightPoint(index) + Vector3.up * _height;
+            Vector3 bottomLeft = GetLeftPoint(index) + Vector3.up * _lowBounds;
+            Vector3 bottomRight = GetRightPoint(index) + Vector3.up * _lowBounds;
+
+            return new RectBounds(topLeft, topRight, bottomLeft, bottomRight);
         }
         #endregion
 

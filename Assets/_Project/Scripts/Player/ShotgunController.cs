@@ -34,7 +34,7 @@ namespace Game.Player
 
         private void Update()
         {
-            if (_shotgun.IsReloading || _shotgun.IsInCooldown)
+            if (_shotgun.IsReloading || _shotgun.IsInShootCooldown)
                 return;
 
             if (_inputService.Shoot.Pressed && _shotgun.TryShoot())

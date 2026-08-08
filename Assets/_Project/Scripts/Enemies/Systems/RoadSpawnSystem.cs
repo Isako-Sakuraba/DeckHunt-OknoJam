@@ -19,10 +19,10 @@ namespace Game.Enemies
         /// <returns>True if succeeded, otherwise false</returns>
         public bool TrySpawn(Enemy enemy)
         {
-            var instance = Instantiate(enemy);
 
             if (_roadLayerSystem.TryGetUnoccupiedLayer(out var roadLayer))
             {
+                var instance = Instantiate(enemy);
                 instance.Spawn(roadLayer);
                 return true;
             }

@@ -44,7 +44,7 @@ namespace Game.Player
             //Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
             //Quaternion desiredRotation = Quaternion.FromToRotation(Vector3.forward, ray.direction);
 
-            //if (_shotgun.IsReloading || _shotgun.IsInCooldown)
+            //if (_shotgun.IsReloading || _shotgun.IsInShootCooldown)
             //    desiredRotation = _initialRotation;
 
             //_target.rotation = Quaternion.Lerp(_target.rotation, desiredRotation, _rotationLerp * Time.deltaTime);
@@ -53,7 +53,7 @@ namespace Game.Player
 
             Quaternion desiredRotation;
 
-            if (_shotgun.IsReloading || _shotgun.IsInCooldown)
+            if (_shotgun.IsReloading)
             {
                 desiredRotation = _initialRotation;
             }
