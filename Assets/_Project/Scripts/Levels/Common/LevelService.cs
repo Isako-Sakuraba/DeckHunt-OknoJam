@@ -1,5 +1,6 @@
 using Alchemy.Inspector;
 using Game.Services;
+using System;
 using UnityEngine;
 
 namespace Game.Levels
@@ -9,6 +10,9 @@ namespace Game.Levels
         private LevelBase _currentLevel;
         
         public LevelBase CurrentLevel => _currentLevel;
+
+        public event Action<LevelBase> LevelStarted = delegate { };
+        public event Action<LevelBase> LevelFinished = delegate { };
 
         [SerializeReference]
         private LevelBase _testLevel;
@@ -23,6 +27,7 @@ namespace Game.Levels
             _currentLevel?.Finish();
             _currentLevel = level;
             _currentLevel.Start();
+            LevelStarted.Invoke(_currentLevel);
         }
 
         private void Update()
@@ -35,6 +40,7 @@ namespace Game.Levels
             if (_currentLevel.IsFinished)
             {
                 _currentLevel.Finish();
+                LevelFinished.Invoke(_currentLevel);
                 _currentLevel = null;
             }
         }

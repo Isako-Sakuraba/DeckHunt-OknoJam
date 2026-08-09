@@ -7,7 +7,7 @@ namespace Game.Levels
 {
     public class LevelNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-        [SerializeField] private LevelBase _level;
+        [SerializeReference] private LevelBase _level;
         [SerializeField] private LevelNode[] _connected;
         private bool _visited = false;
         private HashSet<LevelNode> _connectedCache = new();
@@ -18,6 +18,9 @@ namespace Game.Levels
         {
             if (_connected == null)
                 return;
+
+            if (_level == null)
+                _level = new EmptyLevel();
 
             foreach (LevelNode node in _connected)
             {

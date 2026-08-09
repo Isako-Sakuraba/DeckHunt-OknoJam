@@ -1,6 +1,6 @@
 using Alchemy.Inspector;
 using Game.Core;
-using Game.Player;
+using Game.Levels;
 using Game.Services;
 using Game.Utilities;
 using UnityEngine;
@@ -15,6 +15,8 @@ namespace Game.Cards
         private CardDatabase _database;
         private MoneyService _moneyService;
         private CardService _cardService;
+
+        private ShopLevel _shopLevel;
 
         private void Start()
         {
@@ -50,6 +52,17 @@ namespace Game.Cards
             }
 
             return false;
+        }
+
+        public void OpenShop(ShopLevel level)
+        {
+            _shopLevel = level;
+            SpawnCards(level.CardAmount);
+        }
+
+        public void CloseShop()
+        {
+            _shopLevel.Complete();
         }
 
         [Button]
