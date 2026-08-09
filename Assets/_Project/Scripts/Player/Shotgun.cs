@@ -46,7 +46,7 @@ namespace Game.Player
         private Action<float> Reload = delegate { };
 
         private ShotgunValues _cachedValue;
-        private Stack<ShotgunValues> _shotgunStack = new();
+        private Stack<ShotgunValues> _modifierStack = new();
 
         private void Awake()
         {
@@ -122,18 +122,21 @@ namespace Game.Player
         {
             _cachedValue = _baseValues;
 
-            foreach (ShotgunValues modifier in _shotgunStack)
+            foreach (ShotgunValues modifier in _modifierStack)
             {
                 _cachedValue.Damage += modifier.Damage;
-                _cachedValue.DamageMultiplier += modifier.DamageMultiplier;
+                _cachedValue.DamageMultiplier *= modifier.DamageMultiplier;
                 _cachedValue.Ammo += modifier.Ammo;
                 _cachedValue.ReloadTime += modifier.ReloadTime;
-                _cachedValue.ReloadTimeMultiplier += modifier.ReloadTimeMultiplier;
+                _cachedValue.ReloadTimeMultiplier *= modifier.ReloadTimeMultiplier;
                 _cachedValue.ShootCooldown += modifier.ShootCooldown;
-                _cachedValue.ShootCooldownMultiplier += modifier.ReloadTimeMultiplier;
+                _cachedValue.ShootCooldownMultiplier *= modifier.ReloadTimeMultiplier;
             }
 
             _cachedValue = ClampValues(_cachedValue, _minValues);
+
+            if (_currentAmmo > MaxAmmo)
+                _currentAmmo = MaxAmmo;
         }
 
         private ShotgunValues ClampValues(ShotgunValues target, ShotgunValues min)
@@ -149,6 +152,22 @@ namespace Game.Player
             values.ShootCooldownMultiplier = Mathf.Max(target.ShootCooldownMultiplier, min.ShootCooldownMultiplier);
 
             return values;
+        }
+
+        public void PushModifier(ShotgunValues values)
+        {
+            _modifierStack.Push(values);
+            RecalculateValues();
+        }
+
+        public ShotgunValues PopModifier()
+        {
+            if (_modifierStack.Count == 0)
+                return default;
+
+            var popped = _modifierStack.Pop();
+            RecalculateValues();
+            return popped;
         }
     }
 }

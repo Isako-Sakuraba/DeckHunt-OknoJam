@@ -13,9 +13,17 @@ namespace Game.Core
 
         public event Action<float> Changed = delegate { };
 
+        [SerializeField] private bool _giveTestMoney = true;
+
         public void Bootstrap()
         {
             ServiceLocator.Register(this);
+        }
+
+        private void Start()
+        {
+            if (_giveTestMoney)
+                Give(500);
         }
 
         public bool TrySpend(int amount)

@@ -27,5 +27,23 @@ namespace Game.Utilities
         {
             value = UnityEngine.Random.Range(range.x, range.y);
         }
+
+        public static void DestroyAllChildren(this RectTransform rectTransform)
+        {
+            // Iterate backwards to avoid index shifting issues when destroying
+            for (int i = rectTransform.childCount - 1; i >= 0; i--)
+            {
+                Transform child = rectTransform.GetChild(i);
+
+#if UNITY_EDITOR
+                // Use DestroyImmediate in Edit Mode / Prefab editing
+                if (!Application.isPlaying)
+                    UnityEngine.Object.DestroyImmediate(child.gameObject);
+                else
+#endif
+                    // Use Destroy at runtime (deferred to end of frame)
+                    UnityEngine.Object.Destroy(child.gameObject);
+            }
+        }
     }
 }
