@@ -1,3 +1,4 @@
+using Game.Services;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,8 @@ namespace Game.Player
         [SerializeField] private ShotgunValues _baseValues;
         [SerializeField] private ShotgunValues _minValues;
 
+        private bool _active = false;
+
         private int _currentAmmo;
 
         private float _shootTimer;
@@ -42,6 +45,8 @@ namespace Game.Player
         public float CooldownTimer => _reloadTimer + _shootTimer;
         public bool IsInCooldown => IsReloading || IsInShootCooldown;
 
+        public bool Active => _active;
+
         private Action<float> Shot = delegate { };
         private Action<float> Reload = delegate { };
 
@@ -52,6 +57,8 @@ namespace Game.Player
         {
             _shootCallback = ShootTimerCallback;
             _reloadCallback = ReloadTimerCallback;
+
+            ServiceLocator.Register(this);
         }
 
         private void Start()
@@ -73,7 +80,7 @@ namespace Game.Player
 
         public bool TryShoot()
         {
-            if (IsInShootCooldown || IsReloading)
+            if (IsInShootCooldown || IsReloading || !_active)
                 return false;
 
             Shot.Invoke(Damage);
@@ -87,7 +94,7 @@ namespace Game.Player
 
         public bool TryReload()
         {
-            if (IsInShootCooldown || IsReloading)
+            if (IsInShootCooldown || IsReloading || !_active)
                 return false;
 
             if (CurrentAmmo == MaxAmmo) 
@@ -116,6 +123,11 @@ namespace Game.Player
                     callback?.Invoke();
                 }
             }
+        }
+
+        public void SetActive(bool active)
+        {
+            _active = active;
         }
 
         private void RecalculateValues()

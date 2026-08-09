@@ -1,4 +1,5 @@
 using Game.Enemies;
+using Game.Player;
 using Game.Services;
 using Game.Utilities;
 using System;
@@ -17,6 +18,7 @@ namespace Game.Levels
         [SerializeField] private bool _spawnGround = true;
 
         private EnemySpawner _enemySpawner;
+        private Shotgun _shotgun;
 
         private int _animalsLeftToSpawn = 1;
         private float _animalSpawnTimer;
@@ -35,9 +37,18 @@ namespace Game.Levels
         public override void Start()
         {
             _enemySpawner = ServiceLocator.Get<EnemySpawner>();
+            _enemySpawner = ServiceLocator.Get<EnemySpawner>();
+            _shotgun = ServiceLocator.Get<Shotgun>();
+
+            _shotgun.SetActive(true);
 
             _animalsLeftToSpawn = _animalsCount; // Just to be safe
             Utils.RandomizeValue(ref _animalSpawnTimer, _starterSpawnDelay);
+        }
+
+        protected override void LateFinish()
+        {
+            _shotgun.SetActive(false);
         }
 
         public override void Update()
@@ -47,6 +58,10 @@ namespace Game.Levels
 
         public void SpawnTimerCallback()
         {
+            if (IsFinished)
+                return;
+
+            _animalsLeftToSpawn--;
             _enemySpawner.TrySpawn(_spawnGround, _spawnAir);
             Utils.RandomizeValue(ref _animalSpawnTimer, _animalSpawnDelay);
         }

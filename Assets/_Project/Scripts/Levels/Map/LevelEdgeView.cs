@@ -1,5 +1,6 @@
 using Alchemy.Inspector;
-using System;
+using LitMotion;
+using LitMotion.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,13 +13,24 @@ namespace Game.Levels
         [SerializeField, Required] private Graphic _graphic;
         [SerializeField, Required] private RectTransform _rectTransform;
 
-        public Color BaseColor => _edge.State == LevelEdge.EdgeState.Completed ? Color.green : Color.white;
+        [Header("Settings")]
+        [SerializeField] private Color _baseColor = Color.brown;
+        [SerializeField] private Color _visitedColor = Color.darkGreen;
+        [SerializeField] private Color _highlightedColor = Color.orange;
+        [SerializeField] private float _nodeOffset = 50f;
+        [SerializeField] private float _colorChangeDuration = 0.15f;
+
+        private bool _highlighted = false;
+
+        private MotionHandle _colorMotion;
 
         private void OnEnable()
         {
             _edge.StateChanged += OnStateChanged;
             _edge.HighlightChanged += OnHighlightChanged;
             _edge.Initialized += OnInitialized;
+
+            UpdateGraphicsImmediately();
         }
 
         private void OnDisable()
@@ -30,10 +42,8 @@ namespace Game.Levels
 
         private void OnHighlightChanged(bool value)
         {
-            if (value)
-                _graphic.color = Color.yellow;
-            else
-                _graphic.color = BaseColor;
+            _highlighted = value;
+            UpdateGraphics();
         }
 
         private void OnStateChanged(LevelEdge.EdgeState state)
@@ -43,7 +53,29 @@ namespace Game.Levels
 
         private void UpdateGraphics()
         {
-            _graphic.color = BaseColor;
+            var targetColor = GetTargetColor();
+
+            if (_graphic.color != targetColor)
+            {
+                if (_colorMotion.IsValid() && _colorMotion.IsPlaying())
+                    _colorMotion.Cancel();
+
+                _colorMotion = LMotion.Create(_graphic.color, targetColor, _colorChangeDuration)
+                    .BindToColor(_graphic);
+            }
+        }
+
+        private void UpdateGraphicsImmediately()
+        {
+            var targetColor = GetTargetColor();
+            _graphic.color = targetColor;
+        }
+
+        public Color GetTargetColor()
+        {
+            var targetColor = _highlighted ? _highlightedColor : _baseColor;
+            targetColor = _edge.State == LevelEdge.EdgeState.Completed ? _visitedColor : targetColor;
+            return targetColor;
         }
 
         private void OnInitialized(LevelNode node1, LevelNode node2)
@@ -61,34 +93,40 @@ namespace Game.Levels
             Vector2 delta = endLocal - startLocal;
             float distance = delta.magnitude;
 
-            if (distance < 0.001f)
+            // Don't draw if nodes are too close or overlap within the offset
+            float effectiveDistance = distance - 2f * _nodeOffset;
+            if (effectiveDistance < 0.001f)
+            {
+                _graphic.enabled = false;
                 return;
+            }
 
-            // Preserve current visual width.
+            _graphic.enabled = true;
+
+            // Preserve current visual width
             float width = _rectTransform.rect.width;
 
-            // Make the edge controlled manually by position/rotation/size.
-            // This prevents anchors from stretching it unexpectedly.
+            // Manual control: no anchor stretching
             _rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
             _rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
 
-            // Bottom-center pivot makes the rect start at node1 and grow toward node2.
+            // Bottom-center pivot so height grows upward along local Y
             _rectTransform.pivot = new Vector2(0.5f, 0f);
 
-            // Place edge start at first node.
-            _rectTransform.localPosition = startLocal;
-
-            // Rotate local "up" axis toward the second node.
+            // Calculate normalized direction
             Vector2 direction = delta / distance;
 
-            // Angle needed to rotate Vector2.up into direction.
+            // This centers the edge in the gap between the two offset boundaries
+            _rectTransform.localPosition = startLocal + direction * _nodeOffset;
+
+            // Rotate local "up" axis toward node2
             float zAngle = Mathf.Atan2(-direction.x, direction.y) * Mathf.Rad2Deg;
             _rectTransform.localRotation = Quaternion.Euler(0f, 0f, zAngle);
 
-            // Stretch using height only. Width remains the same.
-            _rectTransform.sizeDelta = new Vector2(width, distance);
+            // Height uses the effective distance (already offset from both sides)
+            _rectTransform.sizeDelta = new Vector2(width, effectiveDistance);
 
-            UpdateGraphics();
+            UpdateGraphicsImmediately();
         }
 
         private Vector2 GetNodePointInParentSpace(Transform parent, LevelNode node)

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CarefulChoice
   m_EditorClassIdentifier: Assembly-CSharp::Game.Cards.CardConfig
   Title: Careful choice
-  Icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  Icon: {fileID: 1550097837, guid: 5dd402968ae569f40b45da7931adb907, type: 3}
   Price: 20
   CustomBehaviour:
     rid: 288156919743643796
@@ -23,4 +23,4 @@ MonoBehaviour:
     - rid: 288156919743643796
       type: {class: GiveRandomCardBehaviour, ns: Game.Cards, asm: Assembly-CSharp}
       data:
-        _description: Gives a random card
+        _description: Get a random card

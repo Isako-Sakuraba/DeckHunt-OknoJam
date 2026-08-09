@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IdealBalance
   m_EditorClassIdentifier: Assembly-CSharp::Game.Cards.CardConfig
   Title: Ideal balance
-  Icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  Icon: {fileID: -1847586247, guid: 5dd402968ae569f40b45da7931adb907, type: 3}
   Price: 18
   CustomBehaviour:
     rid: 288156919743643799
@@ -25,11 +25,11 @@ MonoBehaviour:
       data:
         Values:
           Damage: 0
-          DamageMultiplier: 0
+          DamageMultiplier: 1
           Ammo: 0
           ReloadTime: 0
-          ReloadTimeMultiplier: 0
+          ReloadTimeMultiplier: 0.7
           ShootCooldown: 0
-          ShootCooldownMultiplier: 0
+          ShootCooldownMultiplier: 1.1
         _goodColor: {r: 0, g: 0.3921569, b: 0, a: 1}
         _badColor: {r: 0.5450981, g: 0, b: 0, a: 1}

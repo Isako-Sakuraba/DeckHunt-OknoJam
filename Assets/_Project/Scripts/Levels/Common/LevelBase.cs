@@ -5,10 +5,13 @@ namespace Game.Levels
     [Serializable]
     public abstract class LevelBase
     {
+        public float EndDelay = 1f;
+
         public abstract bool IsInProcess { get; }
         public abstract bool IsFinished { get; }
 
         public event Action Finished = delegate { };
+
 
         public abstract void Start();
 
@@ -17,6 +20,7 @@ namespace Game.Levels
         public void Finish()
         {
             Finished.Invoke();
+            LateFinish();
         }
 
         protected virtual void LateFinish() { }

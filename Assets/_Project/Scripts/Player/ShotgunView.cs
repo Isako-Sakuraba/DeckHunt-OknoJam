@@ -53,7 +53,7 @@ namespace Game.Player
 
             Quaternion desiredRotation;
 
-            if (_shotgun.IsReloading)
+            if (_shotgun.IsReloading || !_shotgun.Active)
             {
                 desiredRotation = _initialRotation;
             }
