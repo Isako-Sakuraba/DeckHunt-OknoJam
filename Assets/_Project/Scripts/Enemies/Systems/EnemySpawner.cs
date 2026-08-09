@@ -52,13 +52,13 @@ namespace Game.Enemies
             if (instance  != null)
             {
                 _aliveEnemies.Add(instance);
-                instance.Died += OnEnemyDied;
+                instance.Despawned += OnEnemyDied;
             }
         }
 
         private void OnEnemyDied(Enemy enemy)
         {
-            enemy.Died -= OnEnemyDied;
+            enemy.Despawned -= OnEnemyDied;
             _aliveEnemies.Remove(enemy);
         }
 

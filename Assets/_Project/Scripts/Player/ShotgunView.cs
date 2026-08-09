@@ -45,20 +45,20 @@ namespace Game.Player
             Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
             Quaternion desiredRotation = Quaternion.FromToRotation(Vector3.forward, ray.direction);
 
-            if (_shotgun.IsReloading || _shotgun.IsInShootCooldown)
+            if (_shotgun.IsReloading || !_shotgun.Active)
                 desiredRotation = _initialRotation;
 
             _target.rotation = Quaternion.Lerp(_target.rotation, desiredRotation, _rotationLerp * Time.deltaTime);
 
+            bool crosshairActive = _crosshair.activeInHierarchy;
+            bool crosshairDesiredActive = _shotgun.Active;
+
+            if (crosshairActive != crosshairDesiredActive)
+                _crosshair.SetActive(crosshairDesiredActive);
+
             //Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
 
             //Quaternion desiredRotation;
-
-            //bool crosshairActive = _crosshair.activeInHierarchy;
-            //bool crosshairDesiredActive = _shotgun.Active;
-
-            //if (crosshairActive != crosshairDesiredActive)
-            //    _crosshair.SetActive(crosshairDesiredActive);
 
             //if (_shotgun.IsReloading || !_shotgun.Active)
             //{
