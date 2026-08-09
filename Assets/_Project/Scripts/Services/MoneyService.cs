@@ -11,7 +11,7 @@ namespace Game.Core
 
         public int Money => _money;
 
-        public event Action<float> Changed = delegate { };
+        public event Action<int> Changed = delegate { };
 
         [SerializeField] private bool _giveTestMoney = true;
 

@@ -13,6 +13,7 @@ namespace Game.Player
 
         [Header("Settings")]
         [SerializeField] private Transform _target;
+        [SerializeField] private GameObject _crosshair;
         [SerializeField] private float _rotationLerp = 20f;
         [SerializeField] private float _rotationStep = 12.5f;   
 
@@ -52,6 +53,12 @@ namespace Game.Player
             Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
 
             Quaternion desiredRotation;
+
+            bool crosshairActive = _crosshair.activeInHierarchy;
+            bool crosshairDesiredActive = _shotgun.Active;
+
+            if (crosshairActive != crosshairDesiredActive)
+                _crosshair.SetActive(crosshairDesiredActive);
 
             if (_shotgun.IsReloading || !_shotgun.Active)
             {
