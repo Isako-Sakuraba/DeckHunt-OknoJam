@@ -47,8 +47,8 @@ namespace Game.Player
 
         public bool Active => _active;
 
-        private Action<float> Shot = delegate { };
-        private Action<float> Reload = delegate { };
+        public event Action<float> Shot = delegate { };
+        public event Action<float> Reload = delegate { };
 
         private ShotgunValues _cachedValue;
         private Stack<ShotgunValues> _modifierStack = new();
@@ -94,7 +94,7 @@ namespace Game.Player
 
         public bool TryReload()
         {
-            if (IsInShootCooldown || IsReloading || !_active)
+            if (IsInShootCooldown || IsReloading)
                 return false;
 
             if (CurrentAmmo == MaxAmmo) 
@@ -142,7 +142,7 @@ namespace Game.Player
                 _cachedValue.ReloadTime += modifier.ReloadTime;
                 _cachedValue.ReloadTimeMultiplier *= modifier.ReloadTimeMultiplier;
                 _cachedValue.ShootCooldown += modifier.ShootCooldown;
-                _cachedValue.ShootCooldownMultiplier *= modifier.ReloadTimeMultiplier;
+                _cachedValue.ShootCooldownMultiplier *= modifier.ShootCooldownMultiplier;
             }
 
             _cachedValue = ClampValues(_cachedValue, _minValues);

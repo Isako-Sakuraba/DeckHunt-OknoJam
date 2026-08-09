@@ -61,9 +61,13 @@ namespace Game.Levels
             if (IsFinished)
                 return;
 
+            if (_animalsLeftToSpawn > 0)
+            {
+                _enemySpawner.TrySpawn(_spawnGround, _spawnAir);
+                Utils.RandomizeValue(ref _animalSpawnTimer, _animalSpawnDelay);
+            }
+
             _animalsLeftToSpawn--;
-            _enemySpawner.TrySpawn(_spawnGround, _spawnAir);
-            Utils.RandomizeValue(ref _animalSpawnTimer, _animalSpawnDelay);
         }
 
         private bool IsLevelFinished()
