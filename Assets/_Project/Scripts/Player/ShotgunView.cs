@@ -42,34 +42,34 @@ namespace Game.Player
 
         private void Update()
         {
-            //Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
-            //Quaternion desiredRotation = Quaternion.FromToRotation(Vector3.forward, ray.direction);
-
-            //if (_shotgun.IsReloading || _shotgun.IsInShootCooldown)
-            //    desiredRotation = _initialRotation;
-
-            //_target.rotation = Quaternion.Lerp(_target.rotation, desiredRotation, _rotationLerp * Time.deltaTime);
-
             Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
+            Quaternion desiredRotation = Quaternion.FromToRotation(Vector3.forward, ray.direction);
 
-            Quaternion desiredRotation;
-
-            bool crosshairActive = _crosshair.activeInHierarchy;
-            bool crosshairDesiredActive = _shotgun.Active;
-
-            if (crosshairActive != crosshairDesiredActive)
-                _crosshair.SetActive(crosshairDesiredActive);
-
-            if (_shotgun.IsReloading || !_shotgun.Active)
-            {
+            if (_shotgun.IsReloading || _shotgun.IsInShootCooldown)
                 desiredRotation = _initialRotation;
-            }
-            else
-            {
-                desiredRotation = GetQuantizedRotation(ray.direction);
-            }
 
-            _target.rotation = desiredRotation;
+            _target.rotation = Quaternion.Lerp(_target.rotation, desiredRotation, _rotationLerp * Time.deltaTime);
+
+            //Ray ray = _camera.ScreenPointToRay(_inputService.MousePosition);
+
+            //Quaternion desiredRotation;
+
+            //bool crosshairActive = _crosshair.activeInHierarchy;
+            //bool crosshairDesiredActive = _shotgun.Active;
+
+            //if (crosshairActive != crosshairDesiredActive)
+            //    _crosshair.SetActive(crosshairDesiredActive);
+
+            //if (_shotgun.IsReloading || !_shotgun.Active)
+            //{
+            //    desiredRotation = _initialRotation;
+            //}
+            //else
+            //{
+            //    desiredRotation = GetQuantizedRotation(ray.direction);
+            //}
+
+            //_target.rotation = desiredRotation;
         }
 
         private Quaternion GetQuantizedRotation(Vector3 direction)
